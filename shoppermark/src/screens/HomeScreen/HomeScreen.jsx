@@ -1,14 +1,23 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import products from '../../dummyassets/products'
 import Product from '../../components/Product/Product';
-
+import axios from 'axios';
 
 const HomeScreen = ()=> {
+  const [products, setProducts] = React.useState([])
+
+  React.useEffect(() => {
+    const fetchProducts = async () => {
+      const res = await axios.get('/api/products')
+      setProducts(res.data)
+    }
+
+    fetchProducts()
+  }, [])
+  
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Typography variant="h4" align="center" sx={{fontFamily: 'Varela Round', fontWeight:'500' }} gutterBottom component="div">

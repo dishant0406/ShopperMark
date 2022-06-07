@@ -4,6 +4,11 @@ body{
   font-family: 'Poppins', sans-serif;
 }
 
+a, a:hover, a:focus, a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
 main{
   margin-top: 1rem;
   min-height:80vh;

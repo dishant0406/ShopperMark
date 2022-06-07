@@ -5,6 +5,15 @@ import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 export default defineConfig({
   plugins: [react(), viteCommonjs()],
   server: {
-    port: '3001'
+    host: true,
+    port: '3001',
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false
+      }
+    }
   }
+
 })

@@ -1,6 +1,5 @@
 import React from 'react'
 import {NavLink, useParams} from 'react-router-dom'
-import products from '../../dummyassets/products'
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -12,15 +11,27 @@ import Button from '@mui/material/Button';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton';
+import axios from 'axios'
+
 const ProductScreen = () => {
+  const [product, setProduct] = React.useState({})
   const {id} = useParams()
-  const product = products.find(p=> p._id === id)
+
+  React.useEffect(() => {
+    const fetchProducts = async () => {
+      const res = await axios.get(`/api/products/${id}`)
+      setProduct(res.data)
+    }
+
+    fetchProducts()
+  }, [])
+
   return (
     <>
     <NavLink to='/'>
-    <IconButton aria-label="back">
-        <ArrowBackIcon />
-      </IconButton>
+    <Button sx={{color: '#000', marginBottom:'0.5rem'}} startIcon={<ArrowBackIcon />}>
+         Go Back
+      </Button>
     </NavLink>
     <Container>
       <Grid container spacing={5} justifyContent="center">
@@ -34,7 +45,7 @@ const ProductScreen = () => {
         <Divider />
         
         <Typography gutterBottom variant="h7" sx={{fontFamily: 'Varela Round', marginBottom:'0.7rem',marginTop:'0.7rem', fontWeight:'700'}} component="div">
-          <Rating name="read-only" value={product.rating} precision={0.5} size="large"  emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />} readOnly />
+          <Rating value={product.rating || 0} precision={0.5} size="large"  emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />} readOnly />
           <Box sx={{ ml: 2 }}>{`${product.numReviews} reviews`}</Box>
           </Typography>
           <Divider />
