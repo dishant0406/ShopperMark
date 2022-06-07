@@ -1,8 +1,31 @@
 import React from 'react'
 import './App.css'
+import Footer from './components/Footer/Footer'
+import Header from './components/header/Header'
+import Container from '@mui/material/Container';
+import HomeScreen from './screens/HomeScreen/HomeScreen';
+
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import ProductScreen from './screens/ProductScreen/ProductScreen';
 const App = () => {
   return (
-    <div>App</div>
+    
+    <BrowserRouter>
+    <Header/>
+    <main>
+      <Container>
+        <Switch>
+        <Route path='/' exact>
+          <HomeScreen/>
+        </Route>
+        <Route path='/product/:id'>
+          <ProductScreen/>
+        </Route>
+        </Switch>
+      </Container>
+    </main>
+    <Footer/>
+    </BrowserRouter>
   )
 }
 
