@@ -1,18 +1,21 @@
 {
   "name": "shoppermark",
   "version": "1.0.0",
+  "type": "module",
   "description": "E-Shopping website using MERN Stack",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon backend/server.js",
-    "client" :"npm run dev --prefix shoppermark",
+    "client": "npm run dev --prefix shoppermark",
     "dev": "concurrently \"npm run server \" \"npm run client \"  "
   },
   "author": "Dishant Sharma",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.1"
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.3.6"
   },
   "devDependencies": {
     "concurrently": "^7.2.1"

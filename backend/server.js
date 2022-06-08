@@ -1,9 +1,21 @@
-const express = require('express')
+import express, { json } from 'express'
+import products from './Data/products.js'
+import { config } from 'dotenv'
+import connectDB from './config/db.js'
+
+//dotenv config
+config()
+
+//create app
 const app = express()
-const products = require('./Data/products')
 
-app.use(express.json())
+//connect to db
+connectDB()
 
+//middleware
+app.use(json())
+
+//root route
 app.get('/', (req, res) => {
   res.send('Welcome')
 })
@@ -21,5 +33,5 @@ app.get('/api/products/:id', (req, res) => {
   res.status(200).json(product)
 })
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`App is Listen on ${PORT}`))
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => console.log(`App is Listening on ${PORT} running on ${process.env.NODE_ENV} Mode`))
