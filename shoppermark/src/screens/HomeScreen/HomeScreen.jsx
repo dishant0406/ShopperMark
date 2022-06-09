@@ -1,22 +1,44 @@
 import * as React from 'react';
+import { useDispatch, useSelector} from 'react-redux'
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import Typography from '@mui/material/Typography';
 import Product from '../../components/Product/Product';
-import axios from 'axios';
+import {listProduct} from '../../store/actions/productActions'
+import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
 
 const HomeScreen = ()=> {
-  const [products, setProducts] = React.useState([])
+  const dispatch = useDispatch()
+  
+  const productList = useSelector(state => state.productList)
+
+  const {loading, products, error} = productList
 
   React.useEffect(() => {
-    const fetchProducts = async () => {
-      const res = await axios.get('/api/products')
-      setProducts(res.data)
-    }
 
-    fetchProducts()
-  }, [])
+      dispatch(listProduct())
+
+  }, [dispatch])
   
+  if(loading){
+    return (
+      
+        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+        <CircularProgress color="inherit"/>
+        </Backdrop>
+      
+    );
+  }
+
+  if(error){
+    return <Alert severity="error" variant="filled">
+    <AlertTitle>Error</AlertTitle>
+    {error}
+  </Alert>
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
