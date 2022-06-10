@@ -7,6 +7,7 @@ import HomeScreen from './screens/HomeScreen/HomeScreen';
 
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import ProductScreen from './screens/ProductScreen/ProductScreen';
+import CartScreen from './screens/CartScreen/CartScreen';
 const App = () => {
   return (
     
@@ -20,6 +21,9 @@ const App = () => {
         </Route>
         <Route path='/product/:id'>
           <ProductScreen/>
+        </Route>
+        <Route path='/cart/:id?'>
+          <CartScreen/>
         </Route>
         </Switch>
       </Container>
