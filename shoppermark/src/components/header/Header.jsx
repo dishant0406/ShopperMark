@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,11 +14,17 @@ import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import CssBaseline from '@mui/material/CssBaseline';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonIcon from '@mui/icons-material/Person';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../../store/actions/userActions';
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const Header = () => {
+  const dispatch = useDispatch()
+  const history = useHistory()
+  const userLogin = useSelector(state => state.userLogin)
+  const {loading, error, userInfo} = userLogin
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -34,8 +39,17 @@ const Header = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (furl) => {
     setAnchorElUser(null);
+
+    //logout
+    if(furl==='/login'){
+      dispatch(logout())
+    }
+
+    history.push(furl)
+
+    
   };
 
   return (
@@ -49,7 +63,7 @@ const Header = () => {
           <Typography
             variant="h6"
             noWrap
-            component="a"
+            component="div"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -66,14 +80,14 @@ const Header = () => {
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
-              size="large"
+              size="small"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
             >
-              <MenuIcon />
+              <MenuIcon/>
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -102,14 +116,14 @@ const Header = () => {
                 </NavLink>
                   
                 </MenuItem>
-                <MenuItem  onClick={handleCloseNavMenu}>
+                {!userInfo && <MenuItem  onClick={handleCloseNavMenu}>
                 <NavLink to='/login'>
                 <div style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
                 <PersonIcon/>
                 <Typography textAlign="center" sx={{fontFamily:'Poppins'}}>Login</Typography>
                 </div>
                 </NavLink>
-                </MenuItem>
+                </MenuItem>}
             </Menu>
           </Box>
           <ShoppingBasketIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -117,9 +131,9 @@ const Header = () => {
           <Typography
             variant="h5"
             noWrap
-            component="a"
+            component="div"
             sx={{
-              mr: 2,
+              mr: 1,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
               fontFamily: 'Varela Round',
@@ -133,7 +147,7 @@ const Header = () => {
           </Typography>     
         </NavLink>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end', marginRight:'3rem' }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end', marginRight:'1rem' }}>
           <Button
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: '#c0c2c3', display: 'block', fontFamily:'Poppins' }}
@@ -145,24 +159,23 @@ const Header = () => {
                 </div>
                 </NavLink>
               </Button>
-              <Button
-     
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: '#c0c2c3', display: 'block', fontFamily:'Poppins' }}
-              >
-                <NavLink to='/login'>
-                <div style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
-                <PersonIcon/>
-                Login
-                </div>
-                </NavLink>
-              </Button>
+              {!userInfo && <Button
+                            onClick={handleCloseNavMenu}
+                            sx={{ my: 2, color: '#c0c2c3', display: 'block', fontFamily:'Poppins' }}
+                              >
+                            <NavLink to='/login'>
+                            <div style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
+                            <PersonIcon/>
+                            Login
+                            </div>
+                            </NavLink>
+                          </Button>}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          {userInfo && <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" />
+              <IconButton onClick={handleOpenUserMenu} sx={{ backgroundColor: '#c0c2c3', padding: '5px 15px', margin:'0 0', fontFamily:'Poppins', fontWeight:'700' }}>
+                {userInfo.name[0].toUpperCase()}
               </IconButton>
             </Tooltip>
             <Menu
@@ -181,13 +194,17 @@ const Header = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={()=> handleCloseUserMenu('/profile')}>
+                  <Typography textAlign="center">Profile</Typography>
+              </MenuItem>
+              <MenuItem onClick={()=> handleCloseUserMenu('/')}>
+                  <Typography textAlign="center">Dashboard</Typography>
+              </MenuItem>
+              <MenuItem onClick={()=> handleCloseUserMenu('/login')}>
+                  <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
-          </Box>
+          </Box>}
         </Toolbar>
       </Container>
     </AppBar>

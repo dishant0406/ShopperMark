@@ -3,6 +3,7 @@ import express, { json } from 'express'
 import { config } from 'dotenv'
 import connectDB from './config/db.js'
 import productRoutes from './routes/productRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
 //dotenv config
@@ -19,6 +20,9 @@ app.use(json())
 
 //product route
 app.use('/api/products', productRoutes)
+
+//user Routes
+app.use('/api/users', userRoutes)
 
 //not found route
 app.use(notFound)

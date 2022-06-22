@@ -8,6 +8,9 @@ import HomeScreen from './screens/HomeScreen/HomeScreen';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import ProductScreen from './screens/ProductScreen/ProductScreen';
 import CartScreen from './screens/CartScreen/CartScreen';
+import LoginScreen from './screens/UserAuth/LoginScreen';
+import RegisterScreen from './screens/UserAuth/RegisterScreen';
+import UserProfile from './screens/UserProfile/UserProfile';
 const App = () => {
   return (
     
@@ -18,6 +21,15 @@ const App = () => {
         <Switch>
         <Route path='/' exact>
           <HomeScreen/>
+        </Route>
+        <Route path='/login' >
+          <LoginScreen/>
+        </Route>
+        <Route path='/register' >
+          <RegisterScreen/>
+        </Route>
+        <Route path='/profile' >
+          <UserProfile/>
         </Route>
         <Route path='/product/:id'>
           <ProductScreen/>

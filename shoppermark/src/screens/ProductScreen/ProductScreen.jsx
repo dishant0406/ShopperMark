@@ -65,9 +65,7 @@ const ProductScreen = () => {
     return (
       <>
       <NavLink to='/'>
-      <Button sx={{color: '#000', marginBottom:'0.5rem'}} startIcon={<ArrowBackIcon />}>
-           Go Back
-        </Button>
+      <Button sx={{color: '#000', marginBottom:'0.5rem'}} startIcon={<ArrowBackIcon />}>Go Back</Button>
       </NavLink>
       <Container>
         <Grid container spacing={5} justifyContent="center">
@@ -89,9 +87,7 @@ const ProductScreen = () => {
               ${product.price}
             </Typography>
             <Divider />
-          <Typography variant="subtitle1" sx={{fontFamily: 'Poppins',marginTop:'0.7rem'}} gutterBottom >{product.description}</Typography>
-          
-  
+          <Typography variant="subtitle1" sx={{fontFamily: 'Poppins',marginTop:'0.7rem'}} gutterBottom >{product.description}</Typography>            
           </Grid>
           <Grid item xs={12} sm={3}>
             <div>
