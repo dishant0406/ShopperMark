@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getUserDetails } from '../../store/actions/userActions'
+import { getUserDetails, updateUserProfile  } from '../../store/actions/userActions'
 
 //Material UI
 import CircularProgress from '@mui/material/CircularProgress';
@@ -17,18 +17,22 @@ const UserProfile = () => {
   const [cfpassword, setCfpassword] = useState('')
   const [name, setName] = useState('')
   const [open, setOpen] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+  const isMounted = React.useRef(false);
   
   const dispatch = useDispatch()
 
   const userDetails = useSelector(state => state.userDetails)
   const {loading, error, user} = userDetails
-  
+
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo} = userLogin
+  
+  const userUpdateProfile = useSelector(state => state.userUpdateProfiles)
+  const { success} = userUpdateProfile
 
   const history = useHistory();
-  const useQuery = () => new URLSearchParams(useLocation().search);
-  const query = useQuery();
+
 
 
 
@@ -37,20 +41,23 @@ const UserProfile = () => {
       history.push('/login')
     }
     else{
-      if(!user?.name){
+      if(!user.name){
         dispatch(getUserDetails('profile'))
       }else{
-        setName(user?.name)
-        setEmail(user?.email)
+        console.log(user)
+        setName(user.name)
+        setEmail(user.email)
       }
     }
-  }, [userInfo, history]);
+  }, [userInfo, history, user]);
   
 
   const submitHandler = (e)=>{ 
     e.preventDefault();
     if(password===cfpassword){
       //!DISPATCH UPDATED USER
+      dispatch(updateUserProfile({name, email, password}))
+      
     }
 
     if(password!==cfpassword){
@@ -58,12 +65,26 @@ const UserProfile = () => {
     }
   }
 
+  React.useEffect(() => {
+    if(isMounted.current){
+      if(success){
+        setOpen2(true)
+        setCfpassword('')
+        setPassword('')
+      }
+    }
+    else{
+      isMounted.current = true
+    }
+  }, [success]);
+
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
 
     setOpen(false);
+    setOpen2(false);
   };
 
   if(loading){
@@ -85,6 +106,11 @@ const UserProfile = () => {
       <Snackbar open={open} anchorOrigin={{ vertical: 'top', horizontal: 'center', }} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
           Password does not match
+        </Alert>
+      </Snackbar>
+      <Snackbar open={open2} anchorOrigin={{ vertical: 'top', horizontal: 'center', }} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Profile Updated Successfully
         </Alert>
       </Snackbar>
       <div className="loginform">

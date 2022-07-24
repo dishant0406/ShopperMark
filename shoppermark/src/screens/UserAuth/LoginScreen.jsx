@@ -10,6 +10,7 @@ import Backdrop from '@mui/material/Backdrop';
 import LockIcon from '@mui/icons-material/Lock';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import LoginBreadCrumb from './BreadCrumb'
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
@@ -49,6 +50,7 @@ const LoginScreen = () => {
 
   return (
     <div className="login">
+      {redirect !== '' && <LoginBreadCrumb/>}
       {error &&   <Alert severity="error" variant="filled">
                     <AlertTitle>Error</AlertTitle>
                     {error}

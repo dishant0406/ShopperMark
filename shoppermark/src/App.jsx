@@ -11,6 +11,9 @@ import CartScreen from './screens/CartScreen/CartScreen';
 import LoginScreen from './screens/UserAuth/LoginScreen';
 import RegisterScreen from './screens/UserAuth/RegisterScreen';
 import UserProfile from './screens/UserProfile/UserProfile';
+import ShippingScreen from './screens/ShippingScreen/ShippingScreen';
+import PaymentScreen from './screens/PaymentScreen/PaymentScreen';
+import PlaceOrderScreen from './screens/PlaceOrderScreen/PlaceOrderScreen';
 const App = () => {
   return (
     
@@ -24,6 +27,15 @@ const App = () => {
         </Route>
         <Route path='/login' >
           <LoginScreen/>
+        </Route>
+        <Route path='/shipping' >
+          <ShippingScreen/>
+        </Route>
+        <Route path='/payment' >
+          <PaymentScreen/>
+        </Route>
+        <Route path='/placeorder' >
+          <PlaceOrderScreen/>
         </Route>
         <Route path='/register' >
           <RegisterScreen/>
