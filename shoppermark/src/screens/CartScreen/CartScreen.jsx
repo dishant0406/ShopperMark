@@ -144,7 +144,7 @@ const CartScreen = () => {
             Total:
           </Typography>
           <Typography variant="h6" sx={{fontFamily: 'Poppins', fontWeight:'500'}}>
-             ${cartItems.reduce((acc, item) => acc + item.qty * item.price, 0)}
+             ${(cartItems.reduce((acc, item) => acc + item.qty * item.price, 0)).toFixed(2)}
           </Typography>
           </div>
           <div style={{display: 'flex',justifyContent:'space-around', border: '1px solid #b3b3b3', padding: '1rem 0'}}>

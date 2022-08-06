@@ -14,6 +14,7 @@ import UserProfile from './screens/UserProfile/UserProfile';
 import ShippingScreen from './screens/ShippingScreen/ShippingScreen';
 import PaymentScreen from './screens/PaymentScreen/PaymentScreen';
 import PlaceOrderScreen from './screens/PlaceOrderScreen/PlaceOrderScreen';
+import OrderScreen from './screens/OrderScreen/OrderScreen';
 const App = () => {
   return (
     
@@ -48,6 +49,9 @@ const App = () => {
         </Route>
         <Route path='/cart/:id?'>
           <CartScreen/>
+        </Route>
+        <Route path='/order/:id'>
+          <OrderScreen/>
         </Route>
         </Switch>
       </Container>

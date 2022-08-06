@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { createOrder } from '../../store/actions/orderActions';
+import { getOrderDetails, payOrder } from '../../store/actions/orderActions';
+import {PayPalButton} from 'react-paypal-button-v2'
+import { ORDER_PAY_RESET } from '../../store/constants/orderConstants';
+import axios from 'axios';
 
 //Material UI
 import CircularProgress from '@mui/material/CircularProgress';
@@ -9,7 +12,6 @@ import Backdrop from '@mui/material/Backdrop';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import PlaceOrderBreadCrumb from './BreadCrumb';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -33,53 +35,97 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 
 
 
-const PlaceOrderScreen = () => {
+const OrderScreen = () => {
+  const [sdkReady, setSdkReady] = useState(false)
   const dispatch = useDispatch()
   const history = useHistory()
-  const cart = useSelector(state => state.cart)
-  
-  const {cartItems} = cart
+  const {id} = useParams()
 
-  cart.itemsPrice = cartItems.reduce((acc, item) => acc + item.qty * item.price, 0)
-  cart.shippingPrice = cart.itemsPrice > 100 ? 5 : 15
-  cart.taxPrice = Number((cart.itemsPrice * 0.085).toFixed(2))
-  cart.totalPrice = (cart.itemsPrice + cart.shippingPrice + cart.taxPrice).toFixed(2)
-
-  const checkoutHandler = ()=>{
-    dispatch(createOrder({
-      orderItems: cart.cartItems,
-      shippingAddress: cart.shippingAddress,
-      paymentMethod: cart.paymentMethod, 
-      itemsPrice: cart.itemsPrice,
-      shippingPrice: cart.shippingPrice,
-      taxPrice: cart.taxPrice,
-      totalPrice: cart.totalPrice
-    }))
+  const successPaymentHandler = (paymentResult)=>{
+    console.log(paymentResult)
+    dispatch(payOrder(id, paymentResult))
   }
 
-  const orderCreate = useSelector(cart=>cart.orderCreate)
-  const {order, error, success} = orderCreate
+  const orderDetails = useSelector(cart=>cart.orderDetails)
+  const {order, loading, error} = orderDetails
+
+  const orderPay = useSelector(cart=>cart.orderPay)
+  const {loading: loadingPay, success:successPay} = orderPay
 
   React.useEffect(()=>{
-    if(success){
-      history.push(`/order/${order._id}`)
+    const addPaypalScript = async ()=>{
+      const {data:clientID} = await axios.get('/api/config/paypal')
+      const script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.src = `"https://www.paypal.com/sdk/js?client-id=${clientID}`
+      script.async = true
+      script.onload = ()=> setSdkReady(true)
+      document.body.appendChild(script)
     }
-  },[success])
+
+    
+
+   if(!order || successPay || order._id!==id){
+    dispatch({type:ORDER_PAY_RESET})
+    dispatch(getOrderDetails(id))
+   }
+   else if(!order.isPaid){
+    if(!window.paypal){
+      addPaypalScript()
+    }else{
+      setSdkReady(true)
+    }
+   }
+
+  },[successPay, order, id])
+
+
+  if(loading){
+    return (
+      
+        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+        <CircularProgress color="inherit"/>
+        </Backdrop>
+      
+    );
+  }
+
+  if(error){
+    return (
+      <Alert severity="error" variant="filled">
+              <AlertTitle>Bruh!!</AlertTitle>
+              {error}
+      </Alert>
+    )
+  }
 
   return (
     <div>
-      <PlaceOrderBreadCrumb/>
-      <div style={{marginTop:'2rem'}}>
+      <div style={{marginTop:'2rem', display:'flex',flexDirection:'column', alignItems:'center', gap:'2rem'}}>
+      <Typography variant="h4" gutterBottom sx={{fontFamily: 'Poppins', fontWeight: '600', letterSpacing:1.3}} component="div">
+          Order {order._id}
+      </Typography>
       <Grid container spacing={2} justifyContent="space-around">
       <div style={{marginLeft:'1rem'}}>
       <div style={{marginTop:'2rem'}}>
       <div>
       <Typography variant="h5" gutterBottom sx={{fontFamily: 'Poppins', fontWeight: '600', letterSpacing:1.3}} component="div">
-          Address
+          Shipping
       </Typography>
       <Typography variant="body2" gutterBottom sx={{fontSize:'16px',fontFamily: 'Poppins', letterSpacing:1.1}} component="div">
-          {cart.shippingAddress.address},<br/> {cart.shippingAddress.city} {cart.shippingAddress.postalCode}, {cart.shippingAddress.country}
+          <strong>Name:</strong> {order.user.name}<br/>
+          <strong>Email:</strong> <a href={`mailto:${order.user.email}`}>{order.user.email}</a><br/>
+          <strong>Address: </strong>{order.shippingAddress.address},<br/> {order.shippingAddress.city} {order.shippingAddress.postalCode}, {order.shippingAddress.country}
       </Typography>
+      {order.isDelivered ? <>
+        <Alert severity="success" >
+          delivered on {order.deliveredAt}
+      </Alert>
+      </>:<>
+      <Alert severity="error">
+       Not Delivered
+      </Alert>
+      </> }
       </div>
       <Divider  />
       <div style={{marginTop:'1rem'}}>
@@ -87,19 +133,28 @@ const PlaceOrderScreen = () => {
           Payment Method
       </Typography>
       <Typography variant="body2" gutterBottom sx={{fontSize:'16px',fontFamily: 'Poppins', letterSpacing:1.1}} component="div">
-          {cart.paymentMethod}
+          {order.paymentMethod}
       </Typography>
+      {order.isPaid ? <>
+        <Alert severity="success" >
+           Paid on {order.paidAt}
+      </Alert>
+      </>:<>
+      <Alert severity="error">
+       Not Paid
+      </Alert>
+      </> }
       </div>
       <Divider  />
       </div>
       <div style={{marginTop:'2rem'}}>
-      {cartItems.length>0 && (
+      {order.orderItems.length>0 && (
           <Grid item xs={12} sm={8}>
           <Typography variant="h5" gutterBottom sx={{fontFamily: 'Poppins', fontWeight: '600', letterSpacing:1.3}} component="div">
           YOUR SHOPPING CART
           </Typography>
           <List sx={{ width: '100%', bgcolor: 'background.paper' }} >
-            {cartItems.map(item=>{
+            {order.orderItems.map(item=>{
               return <>
               <ListItem key={item.product} alignItems="flex-start">
               <ListItemAvatar>
@@ -149,7 +204,7 @@ const PlaceOrderScreen = () => {
             Items:
           </Typography>
           <Typography variant="h6" sx={{fontFamily: 'Poppins',marginRight:'2rem', fontWeight:'500'}}>
-            ${cart.itemsPrice}
+            ${order.itemsPrice}
           </Typography>
           </div>
           <div style={{display: 'flex',justifyContent:'space-between', border: '1px solid #b3b3b3', padding: '0.7rem 0'}}>
@@ -157,7 +212,7 @@ const PlaceOrderScreen = () => {
             Shipping:
           </Typography>
           <Typography variant="h6" sx={{fontFamily: 'Poppins',marginRight:'2rem', fontWeight:'500'}}>
-            ${cart.shippingPrice}.00
+            ${order.shippingPrice}.00
           </Typography>
           </div>
           <div style={{display: 'flex',justifyContent:'space-between', border: '1px solid #b3b3b3', padding: '0.7rem 0'}}>
@@ -165,7 +220,7 @@ const PlaceOrderScreen = () => {
             Tax:
           </Typography>
           <Typography variant="h6" sx={{fontFamily: 'Poppins',marginRight:'2rem', fontWeight:'500'}}>
-           ${ cart.taxPrice}
+           ${ order.taxPrice}
           </Typography>
           </div>
           <div style={{display: 'flex',justifyContent:'space-between', border: '1px solid #b3b3b3', padding: '0.7rem 0'}}>
@@ -173,17 +228,14 @@ const PlaceOrderScreen = () => {
             Total:
           </Typography>
           <Typography variant="h6" sx={{fontFamily: 'Poppins',marginRight:'2rem', fontWeight:'500'}}>
-            ${cart.totalPrice}
+            ${order.totalPrice}
           </Typography>
           </div>
-          <div style={{display: 'flex',justifyContent:'space-around', border: '1px solid #b3b3b3', padding: '1rem 0'}}>
-              <Button onClick={checkoutHandler} startIcon={<ShoppingBagIcon/>} disabled={cartItems.length <1} variant="contained" disableElevation sx={{width:'90%', backgroundColor:'#000', borderRadius:'2px', height:'3.5rem', fontFamily:'Poppins', fontWeight:'700', fontSize:'16px'}}>Place Order</Button>
+          {!order.isPaid && <div style={{display: 'flex',justifyContent:'space-around', border: '1px solid #b3b3b3', padding: '1rem 0 0 0'}}>
+              <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler}/>
+          </div>}
           </div>
-          </div>
-          {error && <Alert severity="error" variant="filled">
-              <AlertTitle>Bruh!!</AlertTitle>
-              {error}
-            </Alert>}
+          
         </Grid>
       </Grid>
       </div>
@@ -191,4 +243,4 @@ const PlaceOrderScreen = () => {
   )
 }
 
-export default PlaceOrderScreen
+export default OrderScreen 
