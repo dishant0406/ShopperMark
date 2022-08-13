@@ -37,6 +37,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
   }
 })
 
+//* get single order by id 
 const getOrderById = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id).populate('user', 'name email')
   if (!order) {
@@ -47,6 +48,7 @@ const getOrderById = asyncHandler(async (req, res) => {
   res.status(200).json(order)
 })
 
+//* update the order to paid
 const updateOrderToPaid = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id)
   if (!order) {
@@ -67,4 +69,13 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   res.status(200).json(updatedOrder)
 })
 
-export { addOrderItems, getOrderById, updateOrderToPaid }
+//* list logined user oders
+const getMyOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({ user: req.user._id })
+
+  res.status(200).json(orders)
+})
+
+
+
+export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders }

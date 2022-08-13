@@ -26,6 +26,8 @@ const Header = () => {
   const {loading, error, userInfo} = userLogin
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElNav2, setAnchorElNav2] = React.useState(null);
+  const [anchorElUser2, setAnchorElUser2] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -34,6 +36,9 @@ const Header = () => {
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
+  const handleOpenUserMenu2 = (event) => {
+    setAnchorElUser2(event.currentTarget);
+  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
@@ -41,6 +46,18 @@ const Header = () => {
 
   const handleCloseUserMenu = (furl) => {
     setAnchorElUser(null);
+
+    //logout
+    if(furl==='/login'){
+      dispatch(logout())
+    }
+
+    history.push(furl)
+
+    
+  };
+  const handleCloseUserMenu2 = (furl) => {
+    setAnchorElUser2(null);
 
     //logout
     if(furl==='/login'){
@@ -202,6 +219,39 @@ const Header = () => {
               </MenuItem>
               <MenuItem onClick={()=> handleCloseUserMenu('/login')}>
                   <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
+            </Menu>
+          </Box>}
+          {userInfo && userInfo.isAdmin && <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <div onClick={handleOpenUserMenu2} style={{ color:'#c0c2c3', padding: '5px 15px', margin:'0 10px', fontFamily:'Poppins', fontWeight:'700' }}>
+                Admin Panel
+              </div>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser2}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser2)}
+              onClose={handleCloseUserMenu2}
+            >
+              <MenuItem onClick={()=> handleCloseUserMenu2('/admin/userslist')}>
+                  <Typography textAlign="center">Users List</Typography>
+              </MenuItem>
+              <MenuItem onClick={()=> handleCloseUserMenu2('/admin/productlist')}>
+                  <Typography textAlign="center">Products</Typography>
+              </MenuItem>
+              <MenuItem onClick={()=> handleCloseUserMenu2('/admin/orderlist')}>
+                  <Typography textAlign="center">Orders</Typography>
               </MenuItem>
             </Menu>
           </Box>}
