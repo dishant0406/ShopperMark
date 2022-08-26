@@ -16,6 +16,9 @@ import PaymentScreen from './screens/PaymentScreen/PaymentScreen';
 import PlaceOrderScreen from './screens/PlaceOrderScreen/PlaceOrderScreen';
 import OrderScreen from './screens/OrderScreen/OrderScreen';
 import UserListScreen from './screens/UserListScreen/UserListScreen';
+import UserEditScreen from './screens/UserEditScreen/UserEditScreen';
+import OrdersListScreen from './screens/OrdersListScreen/OrdersListScreen';
+import ProductListScreen from './screens/ProductListScreen/ProductListScreen';
 const App = () => {
   return (
     
@@ -56,6 +59,15 @@ const App = () => {
         </Route>
         <Route path='/admin/userslist'>
           <UserListScreen/>
+        </Route>
+        <Route path='/admin/:id/edit'>
+          <UserEditScreen/>
+        </Route>
+        <Route path='/admin/orderlist'>
+          <OrdersListScreen/>
+        </Route>
+        <Route path='/admin/productlist'>
+          <ProductListScreen/>
         </Route>
         </Switch>
       </Container>

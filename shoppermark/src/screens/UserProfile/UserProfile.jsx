@@ -57,7 +57,7 @@ const UserProfile = () => {
     else{
       dispatch({type:ORDER_LIST_MY_RESET})
       dispatch(listMyOrders())
-      if(!user.name){
+      if(!user.name || user._id !== userInfo._id){
         
         dispatch(getUserDetails('profile'))
       }else{

@@ -1,20 +1,23 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { productReducer, singleProductReducer } from './Reducers/productReducer';
+import { productDeleteReducer, productReducer, singleProductReducer } from './Reducers/productReducer';
 import { cartReducer } from './Reducers/cartReducer';
-import { orderCreateReducer, orderDetailsReducer, orderPayReducer, orderListMyReducer } from './Reducers/orderReducer'
+import { orderCreateReducer, orderDetailsReducer, orderPayReducer, orderListMyReducer, orderListReducer } from './Reducers/orderReducer'
 import {
   userLoginReducer,
   userRegisterReducer,
   userDetailsReducer,
   userUpdateProfilesReducer,
-  userListReducer
+  userListReducer,
+  userDeleteReducer,
+  userUpdateReducer
 } from './Reducers/userReducers';
 
 const reducer = combineReducers({
   productList: productReducer,
   productDetails: singleProductReducer,
+  productDelete: productDeleteReducer,
   cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
@@ -24,7 +27,10 @@ const reducer = combineReducers({
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
-  orderListMy: orderListMyReducer
+  orderListMy: orderListMyReducer,
+  orderList: orderListReducer,
+  userDelete: userDeleteReducer,
+  userUpdate: userUpdateReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo') ? JSON.parse(localStorage.getItem('userInfo')) : null

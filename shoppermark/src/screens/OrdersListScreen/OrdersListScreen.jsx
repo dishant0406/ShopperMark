@@ -17,32 +17,32 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
 import { useHistory } from 'react-router-dom';
+import { listAllOrders } from '../../store/actions/orderActions';
+import PaidIcon from '@mui/icons-material/Paid';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-export default function UserListScreen() {
+export default function OrdersListScreen() {
   const history = useHistory()
   
   const dispatch = useDispatch();
 
-  const usersList = useSelector((state) => state.usersList);
+  const orderList = useSelector((state) => state.orderList);
 
-  const {loading, error, users} = usersList;
+  const {loading, error, orders} = orderList;
   
   const userLogin = useSelector((state) => state.userLogin);
 
   const {userInfo} = userLogin;
 
-  const userDelete = useSelector((state) => state.userDelete);
-
-  const {success:successDelete} = userDelete;
 
   React.useEffect(()=>{
     if(userInfo && userInfo.isAdmin){
-      dispatch(listUsers());
+      dispatch(listAllOrders());
     }
     else{
       history.push('/login') 
     }
-  },[successDelete])
+  },[])
 
   const handleDelete = (id)=>{
     dispatch(deleteUsers(id))
@@ -51,33 +51,39 @@ export default function UserListScreen() {
 
   return (
     <Box sx={{ width: '100%', maxWidth: '100vw', bgcolor: 'background.paper' }}>
+      <div style={{display:'flex', justifyContent:'space-around', alignItems:'center'}}>
+        <p style={{fontFamily:'Poppins', fontSize:'24px', fontWeight:'700'}}>All Orders</p>
+        <button style={{backgroundColor:'#000', color:'#fff', width:'12rem',height:'3rem', fontFamily:'Poppins', fontSize:'16px', display:'flex', alignItems:'center', gap:'1rem' }}><AddCircleIcon sx={{color:'#fff', marginLeft:'1rem'}}/> Create Order</button>
+      </div>
       <nav aria-label="main mailbox folders">
         <List>
         <ListItem >
                 <>
                 <ListItemIcon sx={{width:'50px'}}>
-                  <AdminPanelSettingsIcon />
+                  <PaidIcon sx={{color:'#90ee90'}} />
                 </ListItemIcon>
-                <ListItemText sx={{width:'300px'}}  primary='ID' />
-                <ListItemText sx={{width:'300px'}}  primary="Name" />
-                <ListItemText sx={{width:'300px'}}  primary='Email' />
-                <ListItemText sx={{width:'100px'}}  primary='isAdmin' />
-                <ListItemText sx={{width:'100px'}}  primary='Controls' />
+                <ListItemText sx={{width:'100px'}}  primary={'ID'} />
+                <ListItemText sx={{width:'100px'}}  primary={"Price ( in $ )"} />
+                <ListItemText sx={{width:'100px'}}  primary={'Created At'} />
+                <ListItemText sx={{width:'100px'}}  primary={'Paid at'} />
+                <ListItemText sx={{width:'100px'}}  primary={'Delivered'} />
+                <ListItemText sx={{width:'100px'}}  primary={'Controls'} />
               </>
               </ListItem>
-            {users?.map((u)=>{
+            {orders?.map((u)=>{
                 return <ListItem >
                 <>
                 <ListItemIcon sx={{width:'50px'}}>
-                  <AdminPanelSettingsIcon />
+                  <PaidIcon sx={{color:'#90ee90'}} />
                 </ListItemIcon>
-                <ListItemText sx={{width:'300px'}}  primary={u._id} />
-                <ListItemText sx={{width:'300px'}}   primary={u.name} />
-                <ListItemText sx={{width:'300px'}}  primary={u.email} />
-                <ListItemIcon sx={{width:'100px'}}>
-                  {u.isAdmin ? <VerifiedUserIcon sx={{color:'#90ee90'}} /> :<CancelIcon sx={{color:'red'}}/>}
+                <ListItemText sx={{width:'100px'}}  primary={`${u._id.slice(0,10)}...`} />
+                <ListItemText sx={{width:'100px'}}  primary={`${u.totalPrice}`} />
+                <ListItemText sx={{width:'100px'}}  primary={new Date(u.createdAt).toDateString()} />
+                <ListItemText sx={{width:'100px'}}  primary={u.isPaid?new Date(u.paidAt).toDateString():'Not Paid yet'} />
+                <ListItemIcon sx={{width:'165px'}}>
+                  {u.isDelivered ? <VerifiedUserIcon sx={{color:'#90ee90'}} /> :<CancelIcon sx={{color:'red'}}/>}
                 </ListItemIcon>
-                <ListItemIcon sx={{width:'100px'}}>
+                <ListItemIcon sx={{width:'175px'}}>
                   <IconButton onClick={()=> history.push(`/admin/${u._id}/edit`)}>
                     <EditIcon sx={{color:'#90ee90'}}/>
                   </IconButton>

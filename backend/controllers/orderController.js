@@ -76,6 +76,13 @@ const getMyOrders = asyncHandler(async (req, res) => {
   res.status(200).json(orders)
 })
 
+//* list all users oders
+const getAllOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find().populate('user', 'id name')
+
+  res.status(200).json(orders)
+})
 
 
-export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders }
+
+export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders, getAllOrders }

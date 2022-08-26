@@ -117,4 +117,62 @@ const getUsers = asyncHandler(async (req, res) => {
 
 })
 
-export { authuser, getUserProfile, registerUser, updateUserProfile, getUsers }
+
+//! Delete User Profile Route
+const deleteUser = asyncHandler(async (req, res) => {
+
+
+  await User.deleteOne({ _id: req.params.id });
+  res.json({ message: 'User deleted successfully' })
+
+
+})
+
+//! Get User Profile Route
+const getUserById = asyncHandler(async (req, res) => {
+
+  const user = await User.findById(req.params.id)
+
+  if (user) {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    })
+  }
+  else {
+    res.status(404)
+    throw new Error('User not found')
+  }
+
+})
+
+//! Update User Profile Route
+const updateUser = asyncHandler(async (req, res) => {
+
+  const user = await User.findById(req.params.id)
+
+  if (user) {
+    user.name = req.body.name || user.name
+    user.email = req.body.email || user.email
+    user.isAdmin = req.body.isAdmin
+
+    const updatedUser = await user.save()
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    })
+
+  }
+  else {
+    res.status(404)
+    throw new Error('User not found')
+  }
+
+})
+
+export { authuser, getUserById, updateUser, getUserProfile, deleteUser, registerUser, updateUserProfile, getUsers }
