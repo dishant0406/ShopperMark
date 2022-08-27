@@ -78,7 +78,7 @@ export default function UserListScreen() {
                   {u.isAdmin ? <VerifiedUserIcon sx={{color:'#90ee90'}} /> :<CancelIcon sx={{color:'red'}}/>}
                 </ListItemIcon>
                 <ListItemIcon sx={{width:'100px'}}>
-                  <IconButton onClick={()=> history.push(`/admin/${u._id}/edit`)}>
+                  <IconButton onClick={()=> history.push(`/admin/user/${u._id}/edit`)}>
                     <EditIcon sx={{color:'#90ee90'}}/>
                   </IconButton>
                   <IconButton onClick={()=>handleDelete(u._id)}>

@@ -12,7 +12,7 @@ import DraftsIcon from '@mui/icons-material/Drafts';
 import { useSelector, useDispatch } from 'react-redux';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { deleteProduct } from '../../store/actions/productActions';
+import { createProduct, deleteProduct } from '../../store/actions/productActions';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
@@ -22,6 +22,9 @@ import PaidIcon from '@mui/icons-material/Paid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import { PRODUCT_CREATE_RESET } from '../../store/constants/productConstants';
 
 export default function ProductListScreen() {
   const history = useHistory()
@@ -31,6 +34,9 @@ export default function ProductListScreen() {
   const productList = useSelector((state) => state.productList);
   const {loading, error, products} = productList;
 
+  const productCreate = useSelector((state) => state.productCreate);
+  const {loading:loadingCreate, error:errorCreate,success:successCreate, product:createdProduct} = productCreate;
+
   const productDelete = useSelector((state) => state.productDelete);
   const {loading:loadingDelete, error:errorDelete, success:successDelete} = productDelete;
   
@@ -39,20 +45,29 @@ export default function ProductListScreen() {
 
 
   React.useEffect(()=>{
-    if(userInfo && userInfo.isAdmin){
+    dispatch({type:PRODUCT_CREATE_RESET})
+
+    if(userInfo && !userInfo.isAdmin){
+      history.push('/login') 
+      
+    }
+
+    if(successCreate){
+      history.push(`/admin/product/${createdProduct._id}/edit`)
+    }else{
       dispatch(listProduct());
     }
-    else{
-      history.push('/login') 
-    }
-  },[successDelete])
+
+  },[successDelete, successCreate, createdProduct])
 
   const handleDelete = (id)=>{
     //delete product
     dispatch(deleteProduct(id))
   }
 
-  const createProductHandler = ()=>{}
+  const createProductHandler = ()=>{
+    dispatch(createProduct())
+  }
 
   if(loadingDelete){
     return (
@@ -64,7 +79,7 @@ export default function ProductListScreen() {
     );
   }
 
-  if(loading){
+  if(loading || loadingCreate){
     return (
       
         <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
@@ -80,6 +95,14 @@ export default function ProductListScreen() {
        {errorDelete &&   <Alert severity="error" variant="filled">
                     <AlertTitle>Error</AlertTitle>
                     {errorDelete}
+                  </Alert>}
+       {errorCreate &&   <Alert severity="error" variant="filled">
+                    <AlertTitle>Error</AlertTitle>
+                    {errorCreate}
+                  </Alert>}
+       {error &&   <Alert severity="error" variant="filled">
+                    <AlertTitle>Error</AlertTitle>
+                    {error}
                   </Alert>}
       <div style={{display:'flex', justifyContent:'space-around', alignItems:'center'}}>
         <p style={{fontFamily:'Poppins', fontSize:'24px', fontWeight:'700'}}>All Products</p>
@@ -114,7 +137,7 @@ export default function ProductListScreen() {
                   {u.brand}
                 </ListItemIcon>
                 <ListItemIcon sx={{width:'175px'}}>
-                  <IconButton onClick={()=> history.push(`/admin/${u._id}/edit`)}>
+                  <IconButton onClick={()=> history.push(`/admin/product/${u._id}/edit`)}>
                     <EditIcon sx={{color:'#90ee90'}}/>
                   </IconButton>
                   <IconButton onClick={()=>handleDelete(u._id)}>
