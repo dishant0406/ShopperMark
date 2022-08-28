@@ -72,4 +72,34 @@ const updateProduct = asyncHandler(async (req, res) => {
   res.json(updatedProduct)
 })
 
-export { getProducts, getProductById, deleteProduct, createProduct, updateProduct }
+//* Create new Review
+const reviewProduct = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body
+
+  const product = await Product.findById(req.params.id)
+
+  if (!product) {
+    res.status(404)
+    throw new Error('Product not Found!!! :)')
+  }
+
+  const alreadyReviewed = product.reviews.find(r => r.user.toString() === req.user._id.toString())
+
+  if (alreadyReviewed) {
+    res.status(400)
+    throw new Error('Product Already Reviewed')
+  }
+
+  const review = {
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+    user: req.user._id
+  }
+
+  product.reviews.unshift(review)
+  product.numReviews = product.reviews.length
+  product.rating = product.reviews.reduce((a, c) => a + c.rating, 0) / product.reviews.length
+})
+
+export { getProducts, getProductById, deleteProduct, createProduct, updateProduct, reviewProduct }
