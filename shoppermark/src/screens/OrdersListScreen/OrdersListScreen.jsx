@@ -20,6 +20,7 @@ import { useHistory } from 'react-router-dom';
 import { listAllOrders } from '../../store/actions/orderActions';
 import PaidIcon from '@mui/icons-material/Paid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import InfoIcon from '@mui/icons-material/Info';
 
 export default function OrdersListScreen() {
   const history = useHistory()
@@ -31,7 +32,6 @@ export default function OrdersListScreen() {
   const {loading, error, orders} = orderList;
   
   const userLogin = useSelector((state) => state.userLogin);
-
   const {userInfo} = userLogin;
 
 
@@ -44,9 +44,7 @@ export default function OrdersListScreen() {
     }
   },[])
 
-  const handleDelete = (id)=>{
-    dispatch(deleteUsers(id))
-  }
+
 
 
   return (
@@ -67,7 +65,7 @@ export default function OrdersListScreen() {
                 <ListItemText sx={{width:'100px'}}  primary={'Created At'} />
                 <ListItemText sx={{width:'100px'}}  primary={'Paid at'} />
                 <ListItemText sx={{width:'100px'}}  primary={'Delivered'} />
-                <ListItemText sx={{width:'100px'}}  primary={'Controls'} />
+                <ListItemText sx={{width:'100px'}}  primary={'Info'} />
               </>
               </ListItem>
             {orders?.map((u)=>{
@@ -84,11 +82,8 @@ export default function OrdersListScreen() {
                   {u.isDelivered ? <VerifiedUserIcon sx={{color:'#90ee90'}} /> :<CancelIcon sx={{color:'red'}}/>}
                 </ListItemIcon>
                 <ListItemIcon sx={{width:'175px'}}>
-                  <IconButton onClick={()=> history.push(`/admin/${u._id}/edit`)}>
-                    <EditIcon sx={{color:'#90ee90'}}/>
-                  </IconButton>
-                  <IconButton onClick={()=>handleDelete(u._id)}>
-                    <DeleteIcon sx={{color:'red'}}/>
+                  <IconButton onClick={()=> history.push(`/order/${u._id}`)}>
+                    <InfoIcon sx={{color:'#90ee90'}}/>
                   </IconButton>
                 </ListItemIcon>
               </>

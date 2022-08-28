@@ -29,6 +29,7 @@ import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Divider from '@mui/material/Divider';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import { ORDER_CREATE_RESET } from '../../store/constants/orderConstants';
 
 
 
@@ -61,6 +62,7 @@ const PlaceOrderScreen = () => {
   const {order, error, success} = orderCreate
 
   React.useEffect(()=>{
+    dispatch({type: ORDER_CREATE_RESET})
     if(success){
       history.push(`/order/${order._id}`)
     }

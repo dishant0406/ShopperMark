@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getOrderDetails, payOrder } from '../../store/actions/orderActions';
+import { deliverOrder, getOrderDetails, payOrder } from '../../store/actions/orderActions';
 import {PayPalButton} from 'react-paypal-button-v2'
-import { ORDER_PAY_RESET } from '../../store/constants/orderConstants';
+import { ORDER_DELIVER_RESET, ORDER_PAY_RESET } from '../../store/constants/orderConstants';
 import axios from 'axios';
 
 //Material UI
@@ -52,6 +52,18 @@ const OrderScreen = () => {
   const orderPay = useSelector(cart=>cart.orderPay)
   const {loading: loadingPay, success:successPay} = orderPay
 
+  const orderDeliver = useSelector(cart=>cart.orderDeliver)
+  const {loading: loadingDeliver, success:successDeliver} = orderDeliver
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const {userInfo} = userLogin;
+
+  React.useEffect(()=>{
+    if(!userInfo){
+      history.push('/login')
+    }
+  },[])
+
   React.useEffect(()=>{
     const addPaypalScript = async ()=>{
       const {data:clientID} = await axios.get('/api/config/paypal')
@@ -65,8 +77,9 @@ const OrderScreen = () => {
 
     
 
-   if(!order || successPay || order._id!==id){
+   if(!order || successPay || order._id!==id || successDeliver){
     dispatch({type:ORDER_PAY_RESET})
+    dispatch({type:ORDER_DELIVER_RESET})
     dispatch(getOrderDetails(id))
    }
    else if(!order.isPaid){
@@ -77,7 +90,13 @@ const OrderScreen = () => {
     }
    }
 
-  },[successPay, order, id])
+  },[successPay, order, id, successDeliver])
+
+  const deliverHandler = async ()=>{
+      dispatch(deliverOrder(id))
+
+  }
+
 
 
   if(loading){
@@ -119,7 +138,7 @@ const OrderScreen = () => {
       </Typography>
       {order.isDelivered ? <>
         <Alert severity="success" >
-          delivered on {order.deliveredAt}
+          delivered on {new Date(order.deliveredAt).toDateString()}
       </Alert>
       </>:<>
       <Alert severity="error">
@@ -137,7 +156,7 @@ const OrderScreen = () => {
       </Typography>
       {order.isPaid ? <>
         <Alert severity="success" >
-           Paid on {order.paidAt}
+           Paid on {new Date(order.paidAt).toDateString()}
       </Alert>
       </>:<>
       <Alert severity="error">
@@ -234,6 +253,10 @@ const OrderScreen = () => {
           {!order.isPaid && <div style={{display: 'flex',justifyContent:'space-around', border: '1px solid #b3b3b3', padding: '1rem 0 0 0'}}>
               <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler}/>
           </div>}
+          {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && <div style={{display: 'flex',justifyContent:'space-around', border: '1px solid #b3b3b3', padding: '1rem 0 0 0'}}>
+            {/* <button onClick={deliverHandler} style={{backgroundColor:'#000', color:'#fff', width:'95%',height:'3rem', fontFamily:'Poppins', fontSize:'16px', display:'flex', alignItems:'center', gap:'1rem', justifyContent:'center', cursor:'pointer' }}>Mark as Delivered</button> */}
+            <Button onClick={deliverHandler} startIcon={<PointOfSaleIcon/>} variant="contained" disableElevation sx={{width:'90%', backgroundColor:'#000', borderRadius:'2px', height:'3.5rem', fontFamily:'Poppins', fontWeight:'700', fontSize:'16px', marginBottom:'1rem'}}>Mark as Delivered</Button>
+            </div>}
           </div>
           
         </Grid>
