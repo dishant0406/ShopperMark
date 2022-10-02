@@ -10,6 +10,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import ShippingBreadCrumb from './BreadCrumb';
+import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
 
 const ShippingScreen = () => {
   const history = useHistory();
@@ -32,6 +33,7 @@ const ShippingScreen = () => {
 
   return (
     <div className="login">
+       <TitleHelmet title={`ShopperMark | Shipping `} desc='Shipping'/>
       <ShippingBreadCrumb/>
       <div className="loginform">
         <form className="login-form" onSubmit={submitHandler}>

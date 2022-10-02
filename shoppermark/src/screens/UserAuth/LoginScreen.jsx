@@ -11,6 +11,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import LoginBreadCrumb from './BreadCrumb'
+import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('')
@@ -50,6 +51,7 @@ const LoginScreen = () => {
 
   return (
     <div className="login">
+       <TitleHelmet title={`ShopperMark | Login `} desc='Login'/>
       {redirect !== '' && <LoginBreadCrumb/>}
       {error &&   <Alert severity="error" variant="filled">
                     <AlertTitle>Error</AlertTitle>

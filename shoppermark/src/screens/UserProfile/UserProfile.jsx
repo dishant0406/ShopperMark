@@ -21,6 +21,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import { ORDER_LIST_MY_RESET } from '../../store/constants/orderConstants'
+import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
 
 const UserProfile = () => {
   const [email, setEmail] = useState('')
@@ -116,6 +117,7 @@ const UserProfile = () => {
 
   return (
     <div className="login">
+       <TitleHelmet title={`ShopperMark | My Profile `} desc='Edit'/>
       {error &&   <Alert severity="error" variant="filled">
                     <AlertTitle>Error</AlertTitle>
                     {error}

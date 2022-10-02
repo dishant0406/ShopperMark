@@ -11,6 +11,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Snackbar from '@mui/material/Snackbar';
+import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('')
@@ -67,6 +68,7 @@ const RegisterScreen = () => {
 
   return (
     <div className="login">
+       <TitleHelmet title={`ShopperMark | Register `} desc='Register'/>
       {error &&   <Alert severity="error" variant="filled">
                     <AlertTitle>Error</AlertTitle>
                     {error}

@@ -11,6 +11,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
 
 const PaymentScreen = () => {
   const history = useHistory();
@@ -39,6 +40,7 @@ const PaymentScreen = () => {
 
   return (
     <div className="login">
+       <TitleHelmet title={`Complete your Payment`} desc='Payment'/>
       <ShippingBreadCrumb/>
       <div className="loginform">
         <form className="login-form" onSubmit={submitHandler}>

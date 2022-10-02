@@ -3,8 +3,26 @@ import Product from '../models/productModel.js'
 
 //* get all products
 const getProducts = asyncHandler(async (req, res) => {
-  const product = await Product.find({})
-  res.status(200).json(product)
+  const pageSize = 6
+  const page = Number(req.query.pageNumber) || 1
+  const keyword = req.query.keyword ? {
+    name: {
+      $regex: req.query.keyword,
+      $options: 'i'
+    }
+  } : {}
+  const count = await Product.count({ ...keyword })
+  const product = await Product.find({ ...keyword }).limit(pageSize).skip(pageSize * (page - 1))
+
+  res.status(200).json({ products: product, page, pages: Math.ceil(count / pageSize) })
+})
+
+//* Create new Review
+const getTopProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3)
+
+  res.json(products)
+
 })
 
 //* Get Single Product by ID
@@ -100,6 +118,11 @@ const reviewProduct = asyncHandler(async (req, res) => {
   product.reviews.unshift(review)
   product.numReviews = product.reviews.length
   product.rating = product.reviews.reduce((a, c) => a + c.rating, 0) / product.reviews.length
+
+  await product.save()
+  res.status(201).json({ message: 'Review Added' })
 })
 
-export { getProducts, getProductById, deleteProduct, createProduct, updateProduct, reviewProduct }
+
+
+export { getProducts, getTopProducts, getProductById, deleteProduct, createProduct, updateProduct, reviewProduct }

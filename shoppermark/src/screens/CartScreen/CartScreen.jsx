@@ -24,6 +24,7 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
 
 
 const CartScreen = () => {
@@ -58,7 +59,7 @@ const CartScreen = () => {
 
   return (
     <>
-    
+    <TitleHelmet title={`ShopperMark | Cart `} desc='Cart'/>
     <Box sx={{ flexGrow: 1 }}>
     <NavLink to='/'>
       <Button sx={{color: '#000', marginBottom:'0.5rem'}} startIcon={<ArrowBackIcon />}>

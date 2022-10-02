@@ -30,6 +30,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Divider from '@mui/material/Divider';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { ORDER_CREATE_RESET } from '../../store/constants/orderConstants';
+import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
 
 
 
@@ -70,6 +71,7 @@ const PlaceOrderScreen = () => {
 
   return (
     <div>
+       <TitleHelmet title={`Place your Order`} desc='Place Order'/>
       <PlaceOrderBreadCrumb/>
       <div style={{marginTop:'2rem'}}>
       <Grid container spacing={2} justifyContent="space-around">

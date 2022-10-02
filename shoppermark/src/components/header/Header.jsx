@@ -17,6 +17,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { NavLink, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../store/actions/userActions';
+import SearchBar from './SearchBar';
 
 
 const Header = () => {
@@ -69,6 +70,10 @@ const Header = () => {
     
   };
 
+  const handleClick = ()=>{
+    history.push('/')
+  }
+
   return (
     <header>
       <CssBaseline />
@@ -76,7 +81,7 @@ const Header = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
         <ShoppingBasketIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-        <NavLink to="/">
+        <div onClick={handleClick} style={{cursor:'pointer'}}>
           <Typography
             variant="h6"
             noWrap
@@ -93,7 +98,7 @@ const Header = () => {
           >
             SHOPPERMARK
           </Typography>
-          </NavLink>
+          </div>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -163,7 +168,9 @@ const Header = () => {
             SHOPPERMARK
           </Typography>     
         </NavLink>
-
+        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, marginRight:'1rem' }}>
+            <SearchBar/>
+        </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end', marginRight:'1rem' }}>
           <Button
                 onClick={handleCloseNavMenu}
@@ -222,7 +229,7 @@ const Header = () => {
               </MenuItem>
             </Menu>
           </Box>}
-          {userInfo && userInfo.isAdmin && <Box sx={{ flexGrow: 0 }}>
+          {userInfo && userInfo.isAdmin && <Box sx={{ flexGrow: 0,display: { xs: 'none', md: 'flex' } }}>
             <Tooltip title="Open settings">
               <div onClick={handleOpenUserMenu2} style={{ color:'#c0c2c3', padding: '5px 15px', margin:'0 10px', fontFamily:'Poppins', fontWeight:'700' }}>
                 Admin Panel

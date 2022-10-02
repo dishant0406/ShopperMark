@@ -23,12 +23,21 @@ import ProductEditScreen from './screens/ProductEditScreen/ProductEditScreen';
 const App = () => {
   return (
     
-    <BrowserRouter>
+    <BrowserRouter >
     <Header/>
     <main>
       <Container>
         <Switch>
         <Route path='/' exact>
+          <HomeScreen/>
+        </Route>
+        <Route exact path='/search/:keyword'>
+          <HomeScreen/>
+        </Route>
+        <Route exact path='/page/:pageNumber'>
+          <HomeScreen/>
+        </Route>
+        <Route exact path='/search/:keyword/page/:pageNumber'>
           <HomeScreen/>
         </Route>
         <Route path='/login' >
@@ -67,11 +76,13 @@ const App = () => {
         <Route path='/admin/product/:id/edit'>
           <ProductEditScreen/>
         </Route>
-        
         <Route path='/admin/orderlist'>
           <OrdersListScreen/>
         </Route>
-        <Route path='/admin/productlist'>
+        <Route path='/admin/productlist' exact>
+          <ProductListScreen/>
+        </Route>
+        <Route path='/admin/productlist/page/:pageNumber' exact>
           <ProductListScreen/>
         </Route>
         </Switch>

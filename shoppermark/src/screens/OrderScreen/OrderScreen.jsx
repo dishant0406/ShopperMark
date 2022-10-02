@@ -31,6 +31,7 @@ import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Divider from '@mui/material/Divider';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
 
 
 
@@ -120,6 +121,7 @@ const OrderScreen = () => {
 
   return (
     <div>
+       <TitleHelmet title={`ShopperMark | Order Review `} desc='Order'/>
       <div style={{marginTop:'2rem', display:'flex',flexDirection:'column', alignItems:'center', gap:'2rem'}}>
       <Typography variant="h4" gutterBottom sx={{fontFamily: 'Poppins', fontWeight: '600', letterSpacing:1.3}} component="div">
           Order {order._id}

@@ -17,6 +17,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Checkbox from '@mui/material/Checkbox';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { PRODUCT_UPDATE_RESET, PRODUCT_RESET } from '../../store/constants/productConstants';
+import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
 
 const ProductEditScreen = () => {
   const [open, setOpen] = React.useState(false);
@@ -129,6 +130,7 @@ const ProductEditScreen = () => {
 
   return (
     <div className="login">
+       <TitleHelmet title={`Edit | ${name} `} desc='Edit Product'/>
       {(loading || loadingUpdate) && <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit"/>
         </Backdrop>}
@@ -146,7 +148,7 @@ const ProductEditScreen = () => {
             <img src={image} alt="product" style={{width:'10rem',height:'10rem', borderRadius:'50%', border:'1px solid #f0f0f0'}} />
           </span>
           <div className="heading">Edit Product</div>
-          <input type="text" placeholder="Full Name" required value={name} onChange={e=> setName(e.target.value.replaceAll(' ',''))} />
+          <input type="text" placeholder="Full Name" required value={name} onChange={e=> setName(e.target.value)} />
           <input type="number" placeholder="Price" required value={price} onChange={e=> setPrice(e.target.value)} />
           <input type="text" placeholder="Brand" required value={brand} onChange={e=> setBrand(e.target.value)} />
           <input type="file" id="upload" class="custom-file-input" onChange={uploadfileHandler}/>

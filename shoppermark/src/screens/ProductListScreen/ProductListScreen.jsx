@@ -16,7 +16,7 @@ import { createProduct, deleteProduct } from '../../store/actions/productActions
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton } from '@mui/material';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { listProduct } from '../../store/actions/productActions';
 import PaidIcon from '@mui/icons-material/Paid';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -25,6 +25,8 @@ import Backdrop from '@mui/material/Backdrop';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { PRODUCT_CREATE_RESET } from '../../store/constants/productConstants';
+import Pageinate from '../../components/Pagination/Pageinate';
+import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
 
 export default function ProductListScreen() {
   const history = useHistory()
@@ -32,7 +34,7 @@ export default function ProductListScreen() {
   const dispatch = useDispatch();
 
   const productList = useSelector((state) => state.productList);
-  const {loading, error, products} = productList;
+  const {loading, error, products, page, pages} = productList;
 
   const productCreate = useSelector((state) => state.productCreate);
   const {loading:loadingCreate, error:errorCreate,success:successCreate, product:createdProduct} = productCreate;
@@ -43,6 +45,9 @@ export default function ProductListScreen() {
   const userLogin = useSelector((state) => state.userLogin);
   const {userInfo} = userLogin;
 
+  const {pageNumber:pageNumberr} = useParams()
+
+  const pageNumber = pageNumberr || 1
 
   React.useEffect(()=>{
     dispatch({type:PRODUCT_CREATE_RESET})
@@ -55,10 +60,10 @@ export default function ProductListScreen() {
     if(successCreate){
       history.push(`/admin/product/${createdProduct._id}/edit`)
     }else{
-      dispatch(listProduct());
+      dispatch(listProduct('',pageNumber));
     }
 
-  },[successDelete, successCreate, createdProduct])
+  },[successDelete, successCreate, createdProduct,pageNumber])
 
   const handleDelete = (id)=>{
     //delete product
@@ -92,6 +97,7 @@ export default function ProductListScreen() {
 
   return (
     <Box sx={{ width: '100%', maxWidth: '100vw', bgcolor: 'background.paper' }}>
+       <TitleHelmet title={`ShopperMark | Product List `} desc='List'/>
        {errorDelete &&   <Alert severity="error" variant="filled">
                     <AlertTitle>Error</AlertTitle>
                     {errorDelete}
@@ -152,6 +158,9 @@ export default function ProductListScreen() {
         </List>
       </nav>
       <Divider />
+      {pages>1 && <div style={{width:'100%', display:'flex', justifyContent:'center', marginTop:'2rem'}}>
+        <Pageinate isAdmin={true} page={page} pages={pages}/>
+      </div>}
     </Box>
   );
 }
