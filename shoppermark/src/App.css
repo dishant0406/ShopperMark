@@ -79,8 +79,8 @@ a, a:hover, a:focus, a:active {
 
 
 .product-card {
-  width: 380px;
-  height: 33rem;
+  max-width: 320px;
+  min-height: 33rem;
   position: relative;
   box-shadow: 0 2px 7px #dfdfdf;
   background: #fafafa;
@@ -93,11 +93,12 @@ a, a:hover, a:focus, a:active {
   height: 300px;
   padding: 50px;
   background: #f0f0f0;
+  overflow: hidden;
 }
 
 .product-tumb img {
-  width: 600px;
-  height: 297px;
+  max-width: 600px;
+  max-height: 297px;
 }
 
 .product-details {
@@ -173,4 +174,12 @@ a, a:hover, a:focus, a:active {
 
 .product-links a:hover {
   color: #fbb72c;
+}
+
+.css-1oqqzyl-MuiContainer-root{
+  padding: 0 !important;
+}
+
+.css-r6t10f-MuiGrid-root>.MuiGrid-item{
+  padding: 0 !important;
 }

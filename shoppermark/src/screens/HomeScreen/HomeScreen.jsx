@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom';
 import Pageinate from '../../components/Pagination/Pageinate';
 import TopProductCarousel from '../../components/Carousel/TopProductCarousel';
 import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
+import CssBaseline  from '@mui/material/CssBaseline';
 
 const HomeScreen = ()=> {
   const dispatch = useDispatch()
@@ -60,9 +61,11 @@ const HomeScreen = ()=> {
       </Typography>
       <Grid sx={{margin:'0'}} container spacing={2} align="center" justifyContent="center">
         {products.map(product =>{
-          return <Grid sx={{marginBottom:'1rem'}} item xs={12} md={4} key={product._id}>
+          return <>
+          <Grid sx={{marginBottom:'2rem'}} item xs={12} md={4} key={product._id}>
             <Product product={product}/>
           </Grid>
+          </>
         })}
       </Grid>
       {pages>1 && <div style={{width:'100%', display:'flex', justifyContent:'center', marginTop:'2rem'}}>
