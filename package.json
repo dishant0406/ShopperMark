@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon backend/server.js",
+    "server": "node backend/server.js",
     "import": "node backend/seeder.js",
     "destroy": "node backend/seeder.js -d",
     "client": "npm run dev --prefix shoppermark",
