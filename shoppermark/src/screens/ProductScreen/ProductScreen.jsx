@@ -113,8 +113,8 @@ const ProductScreen = () => {
       <Container>
         <Grid container spacing={5} justifyContent="center">
           <Grid item xs={12} sm={6}>
-            <div style={{display:'flex', height:'100%', width:'100%', alignItems: 'center', justifyContent: 'center'}}>
-            <img src={product.image} style={{height:'100%', width:'100%'}} />
+            <div style={{display:'flex', height:'100%', width:'30rem',overflow:'hidden', alignItems: 'center', justifyContent: 'center'}}>
+            <img src={product.image} style={{height:'30rem'}} />
             </div>
           </Grid>
           <Grid item xs={12} sm={3}>
