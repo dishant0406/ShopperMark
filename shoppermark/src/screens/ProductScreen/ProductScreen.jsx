@@ -23,6 +23,7 @@ import InputLabel from '@mui/material/InputLabel';
 import CommentIcon from '@mui/icons-material/Comment';
 import { PRODUCT_CREATE_REVIEW_RESET } from '../../store/constants/productConstants';
 import TitleHelmet from '../../components/TitleHelmet/TitleHelmet';
+import Zoom from 'react-img-zoom'
 
 const ProductScreen = () => {
   const [qty, setQty] = React.useState(1);
@@ -114,7 +115,13 @@ const ProductScreen = () => {
         <Grid container spacing={5} justifyContent="center">
           <Grid item xs={12} sm={6}>
             <div style={{display:'flex', height:'100%', width:'30rem',overflow:'hidden', alignItems: 'center', justifyContent: 'center'}}>
-            <img src={product.image} style={{height:'30rem'}} />
+            {/* <img src={product.image} style={{height:'30rem'}} /> */}
+            <Zoom
+              img={product.image}
+              zoomScale={3}
+              width={480}
+              height={480}
+            />
             </div>
           </Grid>
           <Grid item xs={12} sm={3}>
