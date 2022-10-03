@@ -10,7 +10,8 @@
     "import": "node backend/seeder.js",
     "destroy": "node backend/seeder.js -d",
     "client": "npm run dev --prefix shoppermark",
-    "dev": "concurrently \"npm run server \" \"npm run client \"  "
+    "dev": "concurrently \"npm run server \" \"npm run client \"  ",
+    "postbuild": "npm install && npm install --prefix shoppermark && npm run build --prefix shoppermark"
   },
   "author": "Dishant Sharma",
   "license": "ISC",
